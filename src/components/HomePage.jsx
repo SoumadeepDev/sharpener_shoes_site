@@ -2,12 +2,16 @@ import { useContext, useState } from "react";
 import { ShoeContext } from "../ShoeContext";
 import { toast, ToastContainer } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa";
+import { nanoid } from "nanoid";
 
 const HomePage = () => {
-  const { addShoe, shoes } = useContext(ShoeContext);
+  const { addShoe, shoes, addToCart, removeFromCart, removeShoe } =
+    useContext(ShoeContext);
 
   const [formData, setFormData] = useState({
+    id: nanoid(),
     name: "",
     brand: "",
     price: "",
@@ -50,6 +54,7 @@ const HomePage = () => {
     }
     addShoe(formData);
     setFormData({
+      id: nanoid(),
       name: "",
       brand: "",
       price: "",
@@ -60,6 +65,32 @@ const HomePage = () => {
         Small: 0,
       },
     });
+  };
+  const handleAddToCart = (shoe, sizeName) => {
+    const availableStock = shoe.sizes[sizeName]; // Total available stock for the selected size
+    const itemInCart = shoes.find(
+      (item) => item.id === shoe.id && item.size === sizeName
+    ); // Check if the shoe and size are already in the cart
+    const currentQuantity = itemInCart ? itemInCart.quantity : 0; // Current quantity in cart for the selected shoe and size
+    console.log(availableStock, currentQuantity);
+    // Check if adding 1 more item will exceed the available stock
+    if (currentQuantity + 1 <= availableStock) {
+      const itemToAdd = {
+        id: shoe.id,
+        name: shoe.name,
+        brand: shoe.brand,
+        price: shoe.price,
+        image: shoe.image,
+        size: sizeName,
+        quantity: currentQuantity + 1, // Increment the quantity by 1
+      };
+      addToCart(itemToAdd);
+      toast.dismiss();
+      toast.success("Added to Cart");
+    } else {
+      toast.dismiss();
+      toast.error(`No more stock available for ${sizeName} size.`);
+    }
   };
 
   return (
@@ -155,10 +186,10 @@ const HomePage = () => {
                   Large Size Stock : {shoe.sizes.Large} pairs
                 </p>
                 <div className="size_buttons">
-                  <button className="size_button red">
-                    <FaMinus />
-                  </button>
-                  <button className="size_button green">
+                  <button
+                    className="size_button green"
+                    onClick={() => handleAddToCart(shoe, "Large")}
+                  >
                     <FaPlus />
                   </button>
                 </div>
@@ -168,10 +199,10 @@ const HomePage = () => {
                   Medium Size Stock : {shoe.sizes.Medium} pairs
                 </p>
                 <div className="size_buttons">
-                  <button className="size_button red">
-                    <FaMinus />
-                  </button>
-                  <button className="size_button green">
+                  <button
+                    className="size_button green"
+                    onClick={() => handleAddToCart(shoe, "Medium")}
+                  >
                     <FaPlus />
                   </button>
                 </div>
@@ -181,14 +212,20 @@ const HomePage = () => {
                   Small Size Stock : {shoe.sizes.Small} pairs
                 </p>
                 <div className="size_buttons">
-                  <button className="size_button red">
-                    <FaMinus />
-                  </button>
-                  <button className="size_button green">
+                  <button
+                    className="size_button green"
+                    onClick={() => handleAddToCart(shoe, "Small")}
+                  >
                     <FaPlus />
                   </button>
                 </div>
               </div>
+              <button
+                style={{ width: "100%", margin: "20px 0px" }}
+                onClick={() => removeShoe(shoe.id)}
+              >
+                Delete
+              </button>
             </div>
           ))}
         </div>

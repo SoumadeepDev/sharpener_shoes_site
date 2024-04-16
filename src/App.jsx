@@ -5,16 +5,18 @@ import CartPage from "./components/CartPage";
 import ShoeContextProvider from "./ShoeContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import OrderCompletedPage from "./components/OrderCompletedPage";
 
 function App() {
   return (
     <Router>
       <ShoeContextProvider>
-        <ToastContainer position="top-right" pauseOnHover autoClose={1500} />
+        <ToastContainer position="top-center" pauseOnHover autoClose={1500} />
         <Navbar />
         <Routes>
           <Route path="/" exact element={<HomePage />} />
           <Route path="/cartPage" element={<CartPage />} />
+          <Route path="/orderCompletedPage" element={<OrderCompletedPage />} />
         </Routes>
       </ShoeContextProvider>
     </Router>
