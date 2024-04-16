@@ -16,10 +16,6 @@ const CartPage = () => {
     }
   };
 
-  const handleIncreaseQuantity = (shoeId, sizeName, quantity) => {
-    updateQuantityInCart(shoeId, sizeName, quantity + 1);
-  };
-
   const handleClearCart = () => {
     clearCart();
   };
@@ -61,14 +57,6 @@ const CartPage = () => {
                     }
                   >
                     Reduce Quantity
-                  </button>
-                  <button
-                    className="cartGreen"
-                    onClick={() =>
-                      handleIncreaseQuantity(item.id, item.size, item.quantity)
-                    }
-                  >
-                    Increase Quantity
                   </button>
                 </div>
                 <button

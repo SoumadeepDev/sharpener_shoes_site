@@ -7,8 +7,9 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import { nanoid } from "nanoid";
 
 const HomePage = () => {
-  const { addShoe, shoes, addToCart, removeFromCart, removeShoe } =
+  const { addShoe, shoes, cart, addToCart, removeFromCart, removeShoe } =
     useContext(ShoeContext);
+  const { currentQuantity, setCurrentQuantity } = useState(0);
 
   const [formData, setFormData] = useState({
     id: nanoid(),
@@ -68,11 +69,11 @@ const HomePage = () => {
   };
   const handleAddToCart = (shoe, sizeName) => {
     const availableStock = shoe.sizes[sizeName]; // Total available stock for the selected size
-    const itemInCart = shoes.find(
+    const itemInCart = cart.find(
       (item) => item.id === shoe.id && item.size === sizeName
     ); // Check if the shoe and size are already in the cart
+    console.log(shoe);
     const currentQuantity = itemInCart ? itemInCart.quantity : 0; // Current quantity in cart for the selected shoe and size
-    console.log(availableStock, currentQuantity);
     // Check if adding 1 more item will exceed the available stock
     if (currentQuantity + 1 <= availableStock) {
       const itemToAdd = {
